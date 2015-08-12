@@ -18,7 +18,7 @@
  * @param length  Length of string
  * @return On success increase str pointer to
  */
-uint32_t
+int32_t
 ucs4_read_glyph_utf8(const char **text,
                      size_t *length)
 {
