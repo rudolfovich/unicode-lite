@@ -1,32 +1,67 @@
-
 2 bytes test cases
 ==================
 
-Includes cyrillic 0x0400-0x04FF
+// -----------------------------------------------------------------------------------------------------------
+// Bits of       First       Last        Bytes in  Byte 1    Byte 2    Byte 3    Byte 4    Byte 5    Byte 6
+// code point    code point  code point  sequence
+// -----------------------------------------------------------------------------------------------------------
+//  11            U+0080     U+07FF       2        110xxxxx  10xxxxxx
+// -----------------------------------------------------------------------------------------------------------
 
-Success tests of ucs4_read_glyph_utf8
--------------------------------------
+Cyrillic code points: 0x0400-0x04FF
+
+Characters for success tests
+----------------------------
+
+ 1. 0x0080
+ 2. 0x0410
+ 2. 0x0411
+ 3. 0x0417
+ 4. 0x041A
+ 5. 0x041F
+ 6. 0x0420
+ 7. 0x0421
+ 8. 0x0427
+ 9. 0x042A
+10. 0x042F
+11. 0x0430
+12. 0x0431
+13. 0x0437
+14. 0x043A
+15. 0x043F
+16. 0x0440
+17. 0x0441
+18. 0x0447
+19. 0x044A
+20. 0x044F
+21. 0x04FF
+22. 0x06FF
+23. 0x0700
+24. 0x07FF
+
+Success tests cases
+-------------------
 
 ### Test 1 (success)
-  input
-    binary    0b00000000
+  input (UTF-8)
+    binary    0b110 00000 0b10 000000
     decimal   0
     hexical   0x0
     length    1
-  result
-    binary    0b00000000
+  result (UCS-4)
+    binary    0b00000000 0b00000000
     decimal   0
     hexical   0x0
     length    0
     text      == (text + 1)
 
 ### Test 2 (success)
-  input
+  input (UTF-8)
     binary    0b01110011
     decimal   115
     hexical   0x73
     length    2
-  result
+  result (UCS-4)
     binary    0b01110011
     decimal   115
     hexical   0x73
@@ -34,12 +69,12 @@ Success tests of ucs4_read_glyph_utf8
     text      == (text + 1)
 
 ### Test 3 (success)
-  input
+  input (UTF-8)
     binary    0b01111111
     decimal   127
     hexical   0x7F
     length    1
-  result
+  result (UCS-4)
     binary    0b01111111
     decimal   127
     hexical   0x7F
@@ -51,12 +86,12 @@ Failure tests of ucs4_read_glyph_utf8
 -------------------------------------
 
 ### Test 1 (bad character)
-  input
+  input (UTF-8)
     binary    0b10000000
     decimal   0
     hexical   0x0
     length    1
-  result
+  result (UCS-4)
     binary    -0b00000001
     decimal   -1
     hexical   -0x01
@@ -64,12 +99,12 @@ Failure tests of ucs4_read_glyph_utf8
     text      == text
 
 ### Test 2 (bad length)
-  input
+  input (UTF-8)
     binary    0b01110011
     decimal   115
     hexical   0x73
     length    0
-  result
+  result (UCS-4)
     binary    -0b00000001
     decimal   -1
     hexical   -0x01
@@ -77,12 +112,12 @@ Failure tests of ucs4_read_glyph_utf8
     text      == text
 
 ### Test 3 (bad character)
-  input
+  input (UTF-8)
     binary    0b11111111
     decimal   127
     hexical   0x7F
     length    2
-  result
+  result (UCS-4)
     binary    -0b00000001
     decimal   -1
     hexical   -0x01
@@ -90,12 +125,12 @@ Failure tests of ucs4_read_glyph_utf8
     text      == text
 
 ### Test 4 (bad length of 2 bytes signature)
-  input
+  input (UTF-8)
     binary    0b11011111
     decimal   223
     hexical   0xDF
     length    1
-  result
+  result (UCS-4)
     binary    -0b00000001
     decimal   -1
     hexical   -0x01
@@ -149,7 +184,7 @@ Failure tests of ucs4_read_glyph_utf8
 
 
 Test =1
-  input: А :  1040  (0x0410)
+  input (UTF-8): А :  1040  (0x0410)
   UCS4     : 0x0410     0b 0000 0100 0001 0000
   UTF-8    : 0xD090     0b 1100 0100 1001 0000
   original :  208  144  0  0
@@ -160,7 +195,7 @@ Test =1
   converted: 0xD190     0b 1101 0001 1001 0000
 
 Test =2
-  input: Б :  1041 (0x0411)
+  input (UTF-8): Б :  1041 (0x0411)
   UCS4     : 0x0411     0b 0000 0100 0001 0001
   UTF-8    : 0xD091     0b 1101 0000 1001 0001
                         0b 1101 0000 1001 0000
@@ -170,7 +205,7 @@ Test =2
   converted: 0xD0 0x90  0  0
 
 Test =3
-  input: я :  1103 (0x044F)
+  input (UTF-8): я :  1103 (0x044F)
   (bin) 110 10001 10 001111
   UCS4     : 0x044F     0b ____ _100 0100 1111
   UTF-8    : 0xD18F     0b 1101 0001 1000 1111
@@ -185,7 +220,7 @@ Test =3
 
 
 Test =
-  input: я :  1103 (0x044F)
+  input (UTF-8): я :  1103 (0x044F)
   (bin) 110 10001 10 001111
   UCS4     : 0x044F     0b ____ _100 0100 1111
   UTF-8    : 0xD18F     0b 1101 0001 1000 1111
