@@ -1,0 +1,151 @@
+Basic Latin test cases (1 byte)
+===============================
+
+Success tests of ucs4_read_glyph_utf8
+-------------------------------------
+
+### Test 1 (success)
+  input
+    binary    0b00000000
+    decimal   0
+    hexical   0x00
+    length    1
+    text      "\x00"
+  result
+    binary    0b00000000
+    decimal   0
+    hexical   0x00
+    length    0
+    text      (text + 1)
+
+### Test 2 (success)
+  input
+    binary    0b00000001
+    decimal   1
+    hexical   0x01
+    length    1
+    text      "\x01"
+  result
+    binary    0b00000001
+    decimal   1
+    hexical   0x01
+    length    0
+    text      (text + 1)
+
+### Test 3 (success)
+  input
+    binary    0b01110011 0b00000001
+    decimal   115
+    hexical   0x73
+    length    2
+    text      "\x73\x01"
+  result
+    binary    0b01110011
+    decimal   115
+    hexical   0x73
+    length    1
+    text      (text + 1)
+
+### Test 4 (success)
+  input
+    binary    0b01111111
+    decimal   127
+    hexical   0x7F
+    length    1
+    text      "\x7F"
+  result
+    binary    0b01111111
+    decimal   127
+    hexical   0x7F
+    length    0
+    text      (text + 1)
+
+
+Failure tests of ucs4_read_glyph_utf8
+-------------------------------------
+
+### Test 1 (bad character)
+  input
+    binary    0b10000000
+    decimal   128
+    hexical   0x80
+    length    1
+    text      "\x80"
+  result
+    binary    -0b00000001
+    decimal   -1
+    hexical   -0x01
+    length    length
+    text      text
+
+### Test 2 (bad character)
+  input
+    binary    0b10111111
+    decimal   191
+    hexical   0xBF
+    length    1
+    text      "\xBF"
+  result
+    binary    -0b00000001
+    decimal   -1
+    hexical   -0x01
+    length    length
+    text      text
+
+### Test 3 (bad character)
+  input
+    binary    0b11111110
+    decimal   254
+    hexical   0xFE
+    length    1
+    text      "\xFE"
+  result
+    binary    -0b00000001
+    decimal   -1
+    hexical   -0x01
+    length    length
+    text      text
+
+### Test 4 (bad character)
+  input
+    binary    0b11111111 0b00000001
+    decimal   255
+    hexical   0xFF
+    length    2
+    text      "\xFF\x01"
+  result
+    binary    -0b00000001
+    decimal   -1
+    hexical   -0x01
+    length    length
+    text      text
+
+### Test 5 (bad length: zero length correct character)
+  input
+    binary    0b01110011
+    decimal   115
+    hexical   0x73
+    length    0
+    text      "\x73"
+  result
+    binary    -0b00000001
+    decimal   -1
+    hexical   -0x01
+    length    0
+    text      text
+
+### Test 6 (bad length: one byte and 2 bytes signature)
+  input
+    binary    0b11011111
+    decimal   223
+    hexical   0xDF
+    length    1
+    text      "\xDF"
+  result
+    binary    -0b00000001
+    decimal   -1
+    hexical   -0x01
+    length    length
+    text      text
+
+
