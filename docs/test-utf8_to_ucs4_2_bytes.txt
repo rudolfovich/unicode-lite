@@ -13,31 +13,34 @@ Cyrillic code points: 0x0400-0x04FF
 Characters for success tests
 ----------------------------
 
- 1. 0x0080
- 2. 0x0410
- 2. 0x0411
- 3. 0x0417
- 4. 0x041A
- 5. 0x041F
- 6. 0x0420
- 7. 0x0421
- 8. 0x0427
- 9. 0x042A
-10. 0x042F
-11. 0x0430
-12. 0x0431
-13. 0x0437
-14. 0x043A
-15. 0x043F
-16. 0x0440
-17. 0x0441
-18. 0x0447
-19. 0x044A
-20. 0x044F
-21. 0x04FF
-22. 0x06FF
-23. 0x0700
-24. 0x07FF
+ #  UCS4      UTF-8
+----------------------
+ 1. 0x0080    '\u0080'
+ 2. 0x0410    '\u0410'
+ 2. 0x0411    '\u0411'
+ 3. 0x0417    '\u0417'
+ 4. 0x041A    '\u041A'
+ 5. 0x041F    '\u041F'
+ 6. 0x0420    '\u0420'
+ 7. 0x0421    '\u0421'
+ 8. 0x0427    '\u0427'
+ 9. 0x042A    '\u042A'
+10. 0x042F    '\u042F'
+11. 0x0430    '\u0430'
+12. 0x0431    '\u0431'
+13. 0x0437    '\u0437'
+14. 0x043A    '\u043A'
+15. 0x043F    '\u043F'
+16. 0x0440    '\u0440'
+17. 0x0441    '\u0441'
+18. 0x0447    '\u0447'
+19. 0x044A    '\u044A'
+20. 0x044F    '\u044F'
+21. 0x04FF    '\u04FF'
+22. 0x06FF    '\u06FF'
+23. 0x0700    '\u0700'
+24. 0x07FF    '\u07FF'
+----------------------
 
 Success tests cases
 -------------------
@@ -53,194 +56,6 @@ Success tests cases
     decimal   0
     hexical   0x0
     length    0
-    text      == (text + 1)
-
-### Test 2 (success)
-  input (UTF-8)
-    binary    0b01110011
-    decimal   115
-    hexical   0x73
-    length    2
-  result (UCS-4)
-    binary    0b01110011
-    decimal   115
-    hexical   0x73
-    length    1
-    text      == (text + 1)
-
-### Test 3 (success)
-  input (UTF-8)
-    binary    0b01111111
-    decimal   127
-    hexical   0x7F
-    length    1
-  result (UCS-4)
-    binary    0b01111111
-    decimal   127
-    hexical   0x7F
-    length    0
-    text      == (text + 1)
-
-
-Failure tests of ucs4_read_glyph_utf8
--------------------------------------
-
-### Test 1 (bad character)
-  input (UTF-8)
-    binary    0b10000000
-    decimal   0
-    hexical   0x0
-    length    1
-  result (UCS-4)
-    binary    -0b00000001
-    decimal   -1
-    hexical   -0x01
-    length    1
-    text      == text
-
-### Test 2 (bad length)
-  input (UTF-8)
-    binary    0b01110011
-    decimal   115
-    hexical   0x73
-    length    0
-  result (UCS-4)
-    binary    -0b00000001
-    decimal   -1
-    hexical   -0x01
-    length    0
-    text      == text
-
-### Test 3 (bad character)
-  input (UTF-8)
-    binary    0b11111111
-    decimal   127
-    hexical   0x7F
-    length    2
-  result (UCS-4)
-    binary    -0b00000001
-    decimal   -1
-    hexical   -0x01
-    length    2
-    text      == text
-
-### Test 4 (bad length of 2 bytes signature)
-  input (UTF-8)
-    binary    0b11011111
-    decimal   223
-    hexical   0xDF
-    length    1
-  result (UCS-4)
-    binary    -0b00000001
-    decimal   -1
-    hexical   -0x01
-    length    1
-    text      == text
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    std::string a("Б");
-    const char *ap = a.c_str();
-    char a0 = ap[0]; // 0xd0
-    char a1 = ap[1]; // 0x91
-
-    // 0x91D0 = 37328 = 0b1001000111010000
-
-
-
-0x0441
-
-    int a = (glyph >>  0);
-    a = a & mask[2];
-    a = a | indicator[2];
-    *(output_str + 0) = a;
-    //*(output_str + 0) = ((glyph >>  0) & mask[2]) | indicator[2];
-    a = (glyph >>  6);
-    a &= mask[0];
-    a |= indicator[0];
-    *(output_str + 1) = a;
-    //*(output_str + 1) = ((glyph >>  6) & mask[0]) | indicator[0];
-    break;
-  }
-
-
-
-Test =1
-  input (UTF-8): А :  1040  (0x0410)
-  UCS4     : 0x0410     0b 0000 0100 0001 0000
-  UTF-8    : 0xD090     0b 1100 0100 1001 0000
-  original :  208  144  0  0
-  original : 0xD0 0x90  0  0
-  original : 0xD090     0b 1101 0000 1001 0000
-  converted:  209  144  0  0
-  converted: 0xD1 0x90  0  0
-  converted: 0xD190     0b 1101 0001 1001 0000
-
-Test =2
-  input (UTF-8): Б :  1041 (0x0411)
-  UCS4     : 0x0411     0b 0000 0100 0001 0001
-  UTF-8    : 0xD091     0b 1101 0000 1001 0001
-                        0b 1101 0000 1001 0000
-  original :  208  145  0  0
-  original : 0xD0 0x91  0  0
-  converted:  208  144  0  0
-  converted: 0xD0 0x90  0  0
-
-Test =3
-  input (UTF-8): я :  1103 (0x044F)
-  (bin) 110 10001 10 001111
-  UCS4     : 0x044F     0b ____ _100 0100 1111
-  UTF-8    : 0xD18F     0b 1101 0001 1000 1111
-  original :  209  143  0  0
-  original : 0xD1 0x8F  0  0
-  original : 0xD18F     0b 1101 0001 1000 1111
-  original : 0x8FD1     0b 1000 1111 1101 0001
-  converted:  207  145  0  0
-  converted: 0xCF 0x91  0  0
-  converted: 0xCF91     0b 1100 1111 1001 0001
-  converted: 0x91CF     0b 1001 0001 1100 1111
-
-
-Test =
-  input (UTF-8): я :  1103 (0x044F)
-  (bin) 110 10001 10 001111
-  UCS4     : 0x044F     0b ____ _100 0100 1111
-  UTF-8    : 0xD18F     0b 1101 0001 1000 1111
-  original :  209  143  0  0
-  original : 0xD1 0x8F  0  0
-  original : 0xD18F     0b 1101 0001 1000 1111
-  original : 0x8FD1     0b 1000 1111 1101 0001
-  converted:  207  145  0  0
-  converted: 0xCF 0x91  0  0
-  converted: 0xCF91     0b 1100 1111 1001 0001
-  converted: 0x91CF     0b 1001 0001 1100 1111
-
-
-sample-utf8-*-cyrillic.txt (UNIX LineEnding):
-АБЯ
-абя
-
-$ xxd sample-utf8-withoutbom-cyrillic.txt
-0000000: d090 d091 d0af 0ad0 b0d0 b1d1 8f0a       ..............
-
-$ xxd sample-utf8-withbom-cyrillic.txt
-0000000: efbb bfd0 90d0 91d0 af0a d0b0 d0b1 d18f  ................
-0000010: 0a

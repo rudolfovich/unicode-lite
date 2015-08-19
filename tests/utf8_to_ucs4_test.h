@@ -14,3 +14,9 @@ test_utf8_to_ucs4(const char *utf8_input,
                     utf8_expected,        \
                     length_expected)      \
                     )
+
+void
+test_utf8_to_ucs4_success(const char *utf8_input,
+                          int32_t ucs4_expected,
+                          size_t bytes_per_glyph);
+

@@ -1,4 +1,5 @@
 #include "unicodelite.h"
+#include "utf8_to_ucs4_test.h"
 #include <gtest/gtest.h>
 
 void
@@ -23,3 +24,18 @@ test_utf8_to_ucs4(const char *utf8_input,
   EXPECT_EQ(result_ptr[3], expect_ptr[3]);
 }
 
+void
+test_utf8_to_ucs4_success(const char *utf8_input,
+                          int32_t ucs4_expected,
+                          size_t bytes_per_glyph)
+{
+  size_t length_input       = bytes_per_glyph;
+  const char *utf8_expected = utf8_input   + bytes_per_glyph;
+  size_t length_expected    = length_input - bytes_per_glyph;
+
+  test_utf8_to_ucs4(utf8_input,
+                    ucs4_expected,
+                    length_input,
+                    utf8_expected,
+                    length_expected);
+}
